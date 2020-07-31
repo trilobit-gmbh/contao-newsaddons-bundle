@@ -1,0 +1,32 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<?php if (empty($this->items) && empty($this->days)): ?>
+    <p class="empty"><?= $this->empty ?></p>
+<?php else: ?>
+
+<?= $this->pagination ?>
+
+<?php
+/*
+ * @copyright  trilobit GmbH
+ * @author     Peter Adelmann
+ * @package    Trilobit\HydroaeroBundle
+ * @date       2018-01-25
+ *
+ * @info
+ * - Wenn die Seite ohne Parameter aufgerufen wird kann es sein, dass keine Daten gefunden werden.
+ * - Die Paginierung geht jedoch nur über verfügbare Inhalte.
+ * - Aus diesem Grund wird in diesem Fall die Seite neu geladen mit dem ersten Seite aus der Paginierung
+ */
+if (!isset($_GET['year']) && !isset($_GET['quarter']) && !isset($_GET['month']) && !isset($_GET['day']))
+{
+    \Environment::set('uri', $this->pages[array_keys($this->pages)[0]]['href']);
+    \Controller::reload();
+}
+?>
+
+<?php endif ?>
+
+<?php $this->endblock(); ?>

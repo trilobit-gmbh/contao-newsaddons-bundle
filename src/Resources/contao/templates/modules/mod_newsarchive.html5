@@ -1,0 +1,19 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<?php if ($this->quarterly): ?>
+    <h2>Quartal <?= $this->quarter ?>.<?= $this->year ?></h2>
+    <strong>
+        <?= $this->quarterBegin ?> &ndash; <?= $this->quarterEnd ?>
+    </strong>
+<?php endif; ?>
+
+<?php if (empty($this->articles)): ?>
+    <p class="empty"><?= $this->empty ?></p>
+<?php else: ?>
+    <?= implode('', $this->articles) ?>
+    <?= $this->pagination ?>
+<?php endif; ?>
+
+<?php $this->endblock(); ?>
