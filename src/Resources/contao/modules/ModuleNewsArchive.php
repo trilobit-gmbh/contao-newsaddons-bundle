@@ -39,6 +39,8 @@ class ModuleNewsArchive extends \ModuleNewsArchive
         $intMonth = \Input::get('month');
         $intDay = \Input::get('day');
 
+        $this->headlinePeriod = $this->headline;
+
         // Jump to the current period
         if (!isset($_GET['year']) && !isset($_GET['quarter']) && !isset($_GET['month']) && !isset($_GET['day']) && 'all_items' !== $this->news_jumpToCurrent) {
             switch ($this->news_format) {
@@ -65,7 +67,7 @@ class ModuleNewsArchive extends \ModuleNewsArchive
                 $objDate = new \Date($strDate, 'Y');
                 $intBegin = $objDate->yearBegin;
                 $intEnd = $objDate->yearEnd;
-                $this->headline .= ' '.date('Y', $objDate->tstamp);
+                $this->headlinePeriod .= ' '.date('Y', $objDate->tstamp);
             } elseif ($intQuarter) {
                 preg_match_all('/^(\d{4})(\d{1})$/', $intQuarter, $arrMatch);
 
@@ -92,7 +94,7 @@ class ModuleNewsArchive extends \ModuleNewsArchive
                 $intBegin = $objDateBegin->monthBegin;
                 $intEnd = $objDateEnd->monthEnd;
 
-                $this->headline .= ' '.\Date::parse('F Y', $objDateBegin->tstamp).' - '.\Date::parse('F Y', $objDateEnd->tstamp);
+                $this->headlinePeriod .= ' '.\Date::parse('F Y', $objDateBegin->tstamp).' - '.\Date::parse('F Y', $objDateEnd->tstamp);
 
                 $this->Template->quarterly = true;
 
@@ -105,13 +107,13 @@ class ModuleNewsArchive extends \ModuleNewsArchive
                 $objDate = new \Date($strDate, 'Ym');
                 $intBegin = $objDate->monthBegin;
                 $intEnd = $objDate->monthEnd;
-                $this->headline .= ' '.\Date::parse('F Y', $objDate->tstamp);
+                $this->headlinePeriod .= ' '.\Date::parse('F Y', $objDate->tstamp);
             } elseif ($intDay) {
                 $strDate = $intDay;
                 $objDate = new \Date($strDate, 'Ymd');
                 $intBegin = $objDate->dayBegin;
                 $intEnd = $objDate->dayEnd;
-                $this->headline .= ' '.\Date::parse($objPage->dateFormat, $objDate->tstamp);
+                $this->headlinePeriod .= ' '.\Date::parse($objPage->dateFormat, $objDate->tstamp);
             } elseif ('all_items' === $this->news_jumpToCurrent) {
                 $intBegin = 0;
                 $intEnd = time();
@@ -162,6 +164,7 @@ class ModuleNewsArchive extends \ModuleNewsArchive
         }
 
         $this->Template->headline = trim($this->headline);
+        $this->Template->headlinePeriod = trim($this->headlinePeriod);
         $this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
         $this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
     }
