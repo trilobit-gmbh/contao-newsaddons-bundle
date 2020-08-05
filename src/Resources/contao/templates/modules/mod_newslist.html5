@@ -6,9 +6,8 @@
     <?php else: ?>
 
         <?php if ($this->groupQuarterly): ?>
-            <pre><?php foreach ($this->articles as $quarter => $articles): ?>
+            <?php foreach ($this->articles as $quarter => $articles): ?>
                 <?php
-                $match = [];
                 preg_match_all('/^(\d{4})(\d{1})$/', $quarter, $match);
 
                 $strDateBegin = $match[1][0];
@@ -37,12 +36,16 @@
                 $infoQuarter = $match[1][0].'.'.$match[2][0];
                 $infoDuration = \Date::parse('F Y', $objDateBegin->tstamp).' - '.\Date::parse('F Y', $objDateEnd->tstamp);
                 ?>
-                <h2>Quartal <?= $infoQuarter ?></h2>
+
+                <h2>Q <?= $infoQuarter ?></h2>
                 <h1><?= $infoDuration ?></h1>
+
                 <?php foreach ($this->articles as $key => $value): ?>
                     <?= $value ?>
                 <?php endforeach ?>
-            <?php endforeach ?></pre>
+
+            <?php endforeach ?>
+
         <?php else: ?>
             <?php foreach ($this->articles as $key => $value): ?>
                 <?= $value ?>
