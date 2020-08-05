@@ -8,3 +8,4 @@
  */
 
 $GLOBALS['TL_LANG']['tl_module']['news_quarter'] = 'Quartal';
+$GLOBALS['TL_LANG']['tl_module']['groupQuarterly'] = 'Quartalsweise gruppieren';

@@ -9,14 +9,10 @@
 
 namespace Trilobit\NewsaddonsBundle;
 
-use Contao\Environment;
-use Contao\FrontendTemplate;
-use Contao\StringUtil;
-
 /**
  * Class ModuleNewsMenu.
  */
-class ModuleNewsMenu extends \Contao\ModuleNewsMenu
+class ModuleNewsMenu extends \ModuleNewsMenu
 {
     /**
      * @var bool
@@ -80,10 +76,10 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         $this->intNumberOfLinks = 7;
 
         $blnQuery = false;
-        [$this->strUrl] = explode('?', Environment::get('request'), 2);
+        list($this->strUrl) = explode('?', \Environment::get('request'), 2);
 
         // Prepare the URL
-        foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment) {
+        foreach (preg_split('/&(amp;)?/', \Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment) {
             if (false === strpos($fragment, $this->strParameter.'=')) {
                 $this->strUrl .= (!$blnQuery ? '?' : '&amp;').$fragment;
                 $blnQuery = true;
@@ -92,7 +88,7 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
 
         $this->strVarConnector = $blnQuery ? '&amp;' : '?';
 
-        $objTemplate = new FrontendTemplate('pagination');
+        $objTemplate = new \FrontendTemplate('pagination');
 
         $objTemplate->hasFirst = $this->hasFirst();
         $objTemplate->hasPrevious = $this->hasPrevious();
@@ -106,25 +102,25 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         $objTemplate->first = [
             'link' => $this->lblFirst,
             'href' => $this->linkToPage(1),
-            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1 .' ('.$this->pages[array_keys($this->pages)[0]]['link'].')')),
+            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1 .' ('.$this->pages[array_keys($this->pages)[0]]['link'].')')),
         ];
 
         $objTemplate->previous = [
             'link' => $this->lblPrevious,
             'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage - 2]]['date']),
-            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage - 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage - 2]]['link'].')')),
+            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage - 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage - 2]]['link'].')')),
         ];
 
         $objTemplate->next = [
             'link' => $this->lblNext,
             'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage]]['date']),
-            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage + 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage]]['link'].')')),
+            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage + 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage]]['link'].')')),
         ];
 
         $objTemplate->last = [
             'link' => $this->lblLast,
             'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['date']),
-            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages.' ('.$this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['link'].')')),
+            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages.' ('.$this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['link'].')')),
         ];
 
         $objTemplate->class = 'pagination-'.$this->strParameter;

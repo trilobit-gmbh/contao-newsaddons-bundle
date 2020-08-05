@@ -7,6 +7,8 @@
  * @link       http://github.com/trilobit-gmbh/contao-newsaddons-bundle
  */
 
-// signed to enable older datims than 1970
-// $GLOBALS['TL_DCA']['tl_news']['fields']['date']['sql'] = "int(10) signed NOT NULL default '0'";
-// $GLOBALS['TL_DCA']['tl_news']['fields']['time']['sql'] = "int(10) signed NOT NULL default '0'";
+/*
+ * Update fields.
+ */
+$GLOBALS['TL_DCA']['tl_news']['fields']['date']['sql'] = "int(10) signed NOT NULL default '0'";
+$GLOBALS['TL_DCA']['tl_news']['fields']['time']['sql'] = "int(10) signed NOT NULL default '0'";

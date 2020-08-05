@@ -7,5 +7,6 @@
  * @link       http://github.com/trilobit-gmbh/contao-newsaddons-bundle
  */
 
-$GLOBALS['FE_MOD']['news']['newsmenu'] = 'Trilobit\NewsaddonsBundle\ModuleNewsMenu';
-$GLOBALS['FE_MOD']['news']['newsarchive'] = 'Trilobit\NewsaddonsBundle\ModuleNewsArchive';
+$GLOBALS['FE_MOD']['news']['newsmenu'] = \Trilobit\NewsaddonsBundle\ModuleNewsMenu::class;
+$GLOBALS['FE_MOD']['news']['newsarchive'] = \Trilobit\NewsaddonsBundle\ModuleNewsArchive::class;
+$GLOBALS['FE_MOD']['news']['newslist'] = \Trilobit\NewsaddonsBundle\ModuleNewsList::class;

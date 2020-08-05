@@ -8,3 +8,4 @@
  */
 
 $GLOBALS['TL_LANG']['tl_module']['news_quarter'] = 'Quarter';
+$GLOBALS['TL_LANG']['tl_module']['groupQuarterly'] = 'Group quarterly';
