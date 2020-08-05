@@ -8,4 +8,5 @@
  */
 
 $GLOBALS['TL_LANG']['tl_module']['news_quarter'] = 'Quarter';
-$GLOBALS['TL_LANG']['tl_module']['groupQuarterly'] = 'Group quarterly';
+$GLOBALS['TL_LANG']['tl_module']['groupQuarterly'][0] = 'Group quarterly';
+$GLOBALS['TL_LANG']['tl_module']['groupQuarterly'][1] = 'Messages are output grouped by year and quarter.';

@@ -6,9 +6,14 @@
     <?php else: ?>
 
         <?php if ($this->groupQuarterly): ?>
+
             <?php foreach ($this->articles as $quarter => $articles): ?>
                 <?php
                 preg_match_all('/^(\d{4})(\d{1})$/', $quarter, $match);
+
+                if ($this->currentQuarter === $match[1][0].$match[2][0]) {
+                    continue;
+                }
 
                 $strDateBegin = $match[1][0];
                 $strDateEnd = $match[1][0];
@@ -40,7 +45,7 @@
                 <h2>Q <?= $infoQuarter ?></h2>
                 <h1><?= $infoDuration ?></h1>
 
-                <?php foreach ($this->articles as $key => $value): ?>
+                <?php foreach ($articles as $value): ?>
                     <?= $value ?>
                 <?php endforeach ?>
 

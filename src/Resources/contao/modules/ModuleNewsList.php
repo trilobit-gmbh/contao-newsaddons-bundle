@@ -103,6 +103,7 @@ class ModuleNewsList extends \Contao\ModuleNewsList
         }
 
         $this->Template->archives = $this->news_archives;
+        $this->Template->currentQuarter = date('Y').ceil(date('n') / 3);
     }
 
     /**
@@ -126,7 +127,7 @@ class ModuleNewsList extends \Contao\ModuleNewsList
 
         foreach ($objArticles as $objArticle) {
             $intQuarter = date('Y', $objArticle->date).ceil(date('n', $objArticle->date) / 3);
-            $arrArticles[$intQuarter] = $this->parseArticle($objArticle, $blnAddArchive, ((1 === ++$count) ? ' first' : '').(($count === $limit) ? ' last' : '').((0 === ($count % 2)) ? ' odd' : ' even'), $count);
+            $arrArticles[$intQuarter][] = $this->parseArticle($objArticle, $blnAddArchive, ((1 === ++$count) ? ' first' : '').(($count === $limit) ? ' last' : '').((0 === ($count % 2)) ? ' odd' : ' even'), $count);
         }
 
         return $arrArticles;
