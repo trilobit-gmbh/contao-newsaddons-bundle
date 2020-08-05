@@ -11,9 +11,11 @@
                 <?php
                 preg_match_all('/^(\d{4})(\d{1})$/', $quarter, $match);
 
+                /* --- DEMO: skip current quarter
                 if ($this->currentQuarter === $match[1][0].$match[2][0]) {
                     continue;
                 }
+                */
 
                 $strDateBegin = $match[1][0];
                 $strDateEnd = $match[1][0];
