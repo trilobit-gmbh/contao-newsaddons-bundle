@@ -1,12 +1,17 @@
 TrilobitNewsAddonsBundle
 ========================
 
-Mit der NewsAddons Erweiterung ist es möglich Nachrichten nach Quartalen auszugeben. Die beiden News-Module Archiv und Menü werden um den Eintrag Quartal ergänzt, des Weiteren listet das Archiv Modul alle News quartalsweise auf und kann diese auch paginieren. Das Menü Modul listet alle Quartale mit Inhalt gruppiert nach dem Jahr auf. Außerdem wird durch die Erweiterung noch ein weiteres Template, welches dieses Menü als Paginierung ausgibt, hinzugefügt.
+Mit der NewsAddons Erweiterung ist es möglich Nachrichten nach Quartalen sortiert auszugeben.
+
+Im Backend werden die beiden News-Module Archiv und Menü um den Eintrag Quartal ergänzt.
+Das News-Archiv Modul kann nun alle News quartalsweise auflisten und - wenn gewünscht - diese auch paginieren.
+Das News-Menü Modul listet alle Quartale gruppiert nach dem Jahr auf. Die Erweiterung fügt ein weiteres Template (mod_newsmenu_pagination.html5) hinzu, welches dieses Menü paginiert ausgeben kann.
 
 ---
 
-With the NewsAddons extension it is possible to output news by quarter. The two news modules archive and menu are supplemented by the entry quarter, furthermore the archive module lists all news quarterly and can also paginate them. The module menu lists all quarters with content grouped by year. The extension also adds another template that outputs this menu as a pagination.
-Backend Ausschnitt
+With the NewsAddons extension it is possible to output news by quarter.
+
+The two news modules archive and menu are supplemented by the entry quarter, furthermore the archive module lists all news quarterly and can also paginate them. The module menu lists all quarters with content grouped by year. The extension also adds a new template ((mod_newsmenu_pagination.html5)) that outputs this menu  paginated.
 
 ------------
 
