@@ -26,8 +26,8 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create('Trilobit\NewsaddonsBundle\TrilobitNewsaddonsBundle')
-                ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle']),
+            BundleConfig::create(\Trilobit\NewsaddonsBundle\TrilobitNewsaddonsBundle::class)
+                ->setLoadAfter([\Contao\CoreBundle\ContaoCoreBundle::class, \Contao\NewsBundle\ContaoNewsBundle::class]),
         ];
     }
 }
