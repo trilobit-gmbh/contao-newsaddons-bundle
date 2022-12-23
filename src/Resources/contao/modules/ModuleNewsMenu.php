@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @copyright  trilobit GmbH
  * @author     trilobit GmbH <https://github.com/trilobit-gmbh>
  * @license    LGPL-3.0-or-later
- * @link       http://github.com/trilobit-gmbh/contao-newsaddons-bundle
  */
 
 namespace Trilobit\NewsaddonsBundle;
@@ -79,7 +80,7 @@ class ModuleNewsMenu extends \ModuleNewsMenu
         list($this->strUrl) = explode('?', \Environment::get('request'), 2);
 
         // Prepare the URL
-        foreach (preg_split('/&(amp;)?/', \Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment) {
+        foreach (preg_split('/&(amp;)?/', \Environment::get('queryString'), -1, \PREG_SPLIT_NO_EMPTY) as $fragment) {
             if (false === strpos($fragment, $this->strParameter.'=')) {
                 $this->strUrl .= (!$blnQuery ? '?' : '&amp;').$fragment;
                 $blnQuery = true;
@@ -250,8 +251,6 @@ class ModuleNewsMenu extends \ModuleNewsMenu
 
             return $intTotalPages;
         }
-
-        return null;
     }
 
     /**
@@ -314,8 +313,6 @@ class ModuleNewsMenu extends \ModuleNewsMenu
         ) {
             return 'month';
         }
-
-        return null;
     }
 
     /**

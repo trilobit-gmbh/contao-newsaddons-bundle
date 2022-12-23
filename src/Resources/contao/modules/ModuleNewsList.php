@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @copyright  trilobit GmbH
  * @author     trilobit GmbH <https://github.com/trilobit-gmbh>
  * @license    LGPL-3.0-or-later
- * @link       http://github.com/trilobit-gmbh/contao-newsaddons-bundle
  */
 
 namespace Trilobit\NewsaddonsBundle;
 
 use Contao\Config;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\Date;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Pagination;
@@ -109,12 +109,9 @@ class ModuleNewsList extends \Contao\ModuleNewsList
     /**
      * Parse one or more items and return them as array.
      *
-     * @param Collection $objArticles
-     * @param bool       $blnAddArchive
-     *
      * @return array
      */
-    protected function parseArticlesQuarterly($objArticles, $blnAddArchive = false)
+    protected function parseArticlesQuarterly(Collection $objArticles, bool $blnAddArchive = false)
     {
         $limit = $objArticles->count();
 
