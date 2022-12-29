@@ -95,8 +95,8 @@ class ModuleNewsArchive extends \Contao\ModuleNewsArchive
                     $strDateEnd .= '12';
                 }
 
-                $objDateBegin = new Date::parse($strDateBegin, 'Ym');
-                $objDateEnd = new Date::parse($strDateEnd, 'Ym');
+                $objDateBegin = new Date($strDateBegin, 'Ym');
+                $objDateEnd = new Date($strDateEnd, 'Ym');
 
                 $intBegin = $objDateBegin->monthBegin;
                 $intEnd = $objDateEnd->monthEnd;
@@ -111,7 +111,7 @@ class ModuleNewsArchive extends \Contao\ModuleNewsArchive
                 $this->Template->year = $arrMatch[1][0];
             } elseif ($intMonth) {
                 $strDate = $intMonth;
-                $objDate = new Date::parse($strDate, 'Ym');
+                $objDate = new Date($strDate, 'Ym');
                 $intBegin = $objDate->monthBegin;
                 $intEnd = $objDate->monthEnd;
                 $this->headlinePeriod .= ' '. Date::parse('F Y', $objDate->tstamp);
