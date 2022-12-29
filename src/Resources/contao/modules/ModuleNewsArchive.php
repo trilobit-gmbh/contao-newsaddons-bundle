@@ -74,7 +74,7 @@ class ModuleNewsArchive extends \Contao\ModuleNewsArchive
                 $objDate = new Date($strDate, 'Y');
                 $intBegin = $objDate->yearBegin;
                 $intEnd = $objDate->yearEnd;
-                $this->headlinePeriod .= ' '. Date::parse('Y', $objDate->tstamp);
+                $this->headlinePeriod .= ' '.Date::parse('Y', $objDate->tstamp);
             } elseif ($intQuarter) {
                 preg_match_all('/^(\d{4})(\d{1})$/', $intQuarter, $arrMatch);
 
@@ -101,7 +101,7 @@ class ModuleNewsArchive extends \Contao\ModuleNewsArchive
                 $intBegin = $objDateBegin->monthBegin;
                 $intEnd = $objDateEnd->monthEnd;
 
-                $this->headlinePeriod .= ' '. Date::parse('F Y', $objDateBegin->tstamp).' - '. Date::parse('F Y', $objDateEnd->tstamp);
+                $this->headlinePeriod .= ' '.Date::parse('F Y', $objDateBegin->tstamp).' - '.Date::parse('F Y', $objDateEnd->tstamp);
 
                 $this->Template->quarterly = true;
 
@@ -114,13 +114,13 @@ class ModuleNewsArchive extends \Contao\ModuleNewsArchive
                 $objDate = new Date($strDate, 'Ym');
                 $intBegin = $objDate->monthBegin;
                 $intEnd = $objDate->monthEnd;
-                $this->headlinePeriod .= ' '. Date::parse('F Y', $objDate->tstamp);
+                $this->headlinePeriod .= ' '.Date::parse('F Y', $objDate->tstamp);
             } elseif ($intDay) {
                 $strDate = $intDay;
                 $objDate = new Date($strDate, 'Ymd');
                 $intBegin = $objDate->dayBegin;
                 $intEnd = $objDate->dayEnd;
-                $this->headlinePeriod .= ' '. Date::parse($objPage->dateFormat, $objDate->tstamp);
+                $this->headlinePeriod .= ' '.Date::parse($objPage->dateFormat, $objDate->tstamp);
             } elseif ('all_items' === $this->news_jumpToCurrent) {
                 $intBegin = 0;
                 $intEnd = time();
@@ -145,7 +145,7 @@ class ModuleNewsArchive extends \Contao\ModuleNewsArchive
 
                 // Do not index or cache the page if the page number is outside the range
                 if ($page < 1 || $page > max(ceil($total / $this->perPage), 1)) {
-                    throw new PageNotFoundException('Page not found: '. Environment::get('uri'));
+                    throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
                 }
 
                 // Set limit and offset

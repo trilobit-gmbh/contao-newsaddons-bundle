@@ -1,6 +1,6 @@
 {
     "name": "trilobit-gmbh/contao-newsaddons-bundle",
-    "description": "Contao 4 newsaddons bundle",
+    "description": "Contao 4 / Contao 5 newsaddons bundle",
     "type": "contao-bundle",
     "license": "LGPL-3.0-or-later",
     "authors": [
