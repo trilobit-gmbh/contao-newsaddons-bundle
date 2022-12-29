@@ -12,6 +12,7 @@ namespace Trilobit\NewsaddonsBundle;
 
 use Contao\Config;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Date;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Pagination;
@@ -103,15 +104,17 @@ class ModuleNewsList extends \Contao\ModuleNewsList
         }
 
         $this->Template->archives = $this->news_archives;
-        $this->Template->currentQuarter = date('Y').ceil(date('n') / 3);
+        $this->Template->currentQuarter = Date::parse('Y').ceil(date('n') / 3);
     }
 
     /**
      * Parse one or more items and return them as array.
      *
+     * @param mixed $objArticles
+     *
      * @return array
      */
-    protected function parseArticlesQuarterly(Collection $objArticles, bool $blnAddArchive = false)
+    protected function parseArticlesQuarterly($objArticles, bool $blnAddArchive = false)
     {
         $limit = $objArticles->count();
 
@@ -123,7 +126,7 @@ class ModuleNewsList extends \Contao\ModuleNewsList
         $arrArticles = [];
 
         foreach ($objArticles as $objArticle) {
-            $intQuarter = date('Y', $objArticle->date).ceil(date('n', $objArticle->date) / 3);
+            $intQuarter = Date::parse('Y', (int) $objArticle->date).ceil(Date::parse('n', (int) $objArticle->date) / 3);
             $arrArticles[$intQuarter][] = $this->parseArticle($objArticle, $blnAddArchive, ((1 === ++$count) ? ' first' : '').(($count === $limit) ? ' last' : '').((0 === ($count % 2)) ? ' odd' : ' even'), $count);
         }
 

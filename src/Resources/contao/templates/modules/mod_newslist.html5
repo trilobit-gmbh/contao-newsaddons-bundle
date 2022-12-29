@@ -34,14 +34,14 @@
                     $strDateEnd .= '12';
                 }
 
-                $objDateBegin = new \Date($strDateBegin, 'Ym');
-                $objDateEnd = new \Date($strDateEnd, 'Ym');
+                $objDateBegin = new \Contao\Date($strDateBegin, 'Ym');
+                $objDateEnd = new \Contao\Date($strDateEnd, 'Ym');
 
                 $intBegin = $objDateBegin->monthBegin;
                 $intEnd = $objDateEnd->monthEnd;
 
                 $infoQuarter = $match[1][0].'.'.$match[2][0];
-                $infoDuration = \Date::parse('F Y', $objDateBegin->tstamp).' - '.\Date::parse('F Y', $objDateEnd->tstamp);
+                $infoDuration = \Contao\Date::parse('F Y', $objDateBegin->tstamp).' - '.\Contao\Date::parse('F Y', $objDateEnd->tstamp);
                 ?>
 
                 <h2>Q <?= $infoQuarter ?></h2>

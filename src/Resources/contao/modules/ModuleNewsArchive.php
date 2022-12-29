@@ -10,12 +10,18 @@ declare(strict_types=1);
 
 namespace Trilobit\NewsaddonsBundle;
 
+use Contao\Config;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Date;
+use Contao\Environment;
+use Contao\Input;
+use Contao\NewsModel;
+use Contao\Pagination;
 
 /**
  * Class ModuleNewsArchive.
  */
-class ModuleNewsArchive extends \ModuleNewsArchive
+class ModuleNewsArchive extends \Contao\ModuleNewsArchive
 {
     /**
      * @return string
@@ -35,10 +41,10 @@ class ModuleNewsArchive extends \ModuleNewsArchive
         $intBegin = 0;
         $intEnd = 0;
 
-        $intYear = \Input::get('year');
-        $intQuarter = \Input::get('quarter');
-        $intMonth = \Input::get('month');
-        $intDay = \Input::get('day');
+        $intYear = Input::get('year');
+        $intQuarter = Input::get('quarter');
+        $intMonth = Input::get('month');
+        $intDay = Input::get('day');
 
         $this->headlinePeriod = $this->headline;
 
@@ -46,17 +52,17 @@ class ModuleNewsArchive extends \ModuleNewsArchive
         if (!isset($_GET['year']) && !isset($_GET['quarter']) && !isset($_GET['month']) && !isset($_GET['day']) && 'all_items' !== $this->news_jumpToCurrent) {
             switch ($this->news_format) {
                 case 'news_year':
-                    $intYear = date('Y');
+                    $intYear = Date::parse('Y');
                     break;
                 case 'news_quarter':
-                    $intQuarter = date('Y').ceil(date('n', time()) / 3);
+                    $intQuarter = Date::parse('Y').ceil(Date::parse('n', time()) / 3);
                     break;
                 default:
                 case 'news_month':
-                    $intMonth = date('Ym');
+                    $intMonth = Date::parse('Ym');
                     break;
                 case 'news_day':
-                    $intDay = date('Ymd');
+                    $intDay = Date::parse('Ymd');
                     break;
             }
         }
@@ -65,10 +71,10 @@ class ModuleNewsArchive extends \ModuleNewsArchive
         try {
             if ($intYear) {
                 $strDate = $intYear;
-                $objDate = new \Date($strDate, 'Y');
+                $objDate = new Date($strDate, 'Y');
                 $intBegin = $objDate->yearBegin;
                 $intEnd = $objDate->yearEnd;
-                $this->headlinePeriod .= ' '.date('Y', $objDate->tstamp);
+                $this->headlinePeriod .= ' '. Date::parse('Y', $objDate->tstamp);
             } elseif ($intQuarter) {
                 preg_match_all('/^(\d{4})(\d{1})$/', $intQuarter, $arrMatch);
 
@@ -89,38 +95,38 @@ class ModuleNewsArchive extends \ModuleNewsArchive
                     $strDateEnd .= '12';
                 }
 
-                $objDateBegin = new \Date($strDateBegin, 'Ym');
-                $objDateEnd = new \Date($strDateEnd, 'Ym');
+                $objDateBegin = new Date::parse($strDateBegin, 'Ym');
+                $objDateEnd = new Date::parse($strDateEnd, 'Ym');
 
                 $intBegin = $objDateBegin->monthBegin;
                 $intEnd = $objDateEnd->monthEnd;
 
-                $this->headlinePeriod .= ' '.\Date::parse('F Y', $objDateBegin->tstamp).' - '.\Date::parse('F Y', $objDateEnd->tstamp);
+                $this->headlinePeriod .= ' '. Date::parse('F Y', $objDateBegin->tstamp).' - '. Date::parse('F Y', $objDateEnd->tstamp);
 
                 $this->Template->quarterly = true;
 
                 $this->Template->quarter = $arrMatch[2][0];
-                $this->Template->quarterBegin = \Date::parse('F Y', $objDateBegin->tstamp);
-                $this->Template->quarterEnd = \Date::parse('F Y', $objDateEnd->tstamp);
+                $this->Template->quarterBegin = Date::parse('F Y', $objDateBegin->tstamp);
+                $this->Template->quarterEnd = Date::parse('F Y', $objDateEnd->tstamp);
                 $this->Template->year = $arrMatch[1][0];
             } elseif ($intMonth) {
                 $strDate = $intMonth;
-                $objDate = new \Date($strDate, 'Ym');
+                $objDate = new Date::parse($strDate, 'Ym');
                 $intBegin = $objDate->monthBegin;
                 $intEnd = $objDate->monthEnd;
-                $this->headlinePeriod .= ' '.\Date::parse('F Y', $objDate->tstamp);
+                $this->headlinePeriod .= ' '. Date::parse('F Y', $objDate->tstamp);
             } elseif ($intDay) {
                 $strDate = $intDay;
-                $objDate = new \Date($strDate, 'Ymd');
+                $objDate = new Date($strDate, 'Ymd');
                 $intBegin = $objDate->dayBegin;
                 $intEnd = $objDate->dayEnd;
-                $this->headlinePeriod .= ' '.\Date::parse($objPage->dateFormat, $objDate->tstamp);
+                $this->headlinePeriod .= ' '. Date::parse($objPage->dateFormat, $objDate->tstamp);
             } elseif ('all_items' === $this->news_jumpToCurrent) {
                 $intBegin = 0;
                 $intEnd = time();
             }
         } catch (\OutOfBoundsException $e) {
-            throw new PageNotFoundException('Page not found: '.\Environment::get('uri'));
+            throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
         }
 
         $this->Template->articles = [];
@@ -128,18 +134,18 @@ class ModuleNewsArchive extends \ModuleNewsArchive
         // Split the result
         if ($this->perPage > 0) {
             // Get the total number of items
-            $intTotal = \NewsModel::countPublishedFromToByPids($intBegin, $intEnd, $this->news_archives);
+            $intTotal = NewsModel::countPublishedFromToByPids($intBegin, $intEnd, $this->news_archives);
 
             if ($intTotal > 0) {
                 $total = $intTotal;
 
                 // Get the current page
                 $id = 'page_a'.$this->id;
-                $page = (null !== \Input::get($id)) ? \Input::get($id) : 1;
+                $page = (null !== Input::get($id)) ? Input::get($id) : 1;
 
                 // Do not index or cache the page if the page number is outside the range
                 if ($page < 1 || $page > max(ceil($total / $this->perPage), 1)) {
-                    throw new PageNotFoundException('Page not found: '.\Environment::get('uri'));
+                    throw new PageNotFoundException('Page not found: '. Environment::get('uri'));
                 }
 
                 // Set limit and offset
@@ -147,16 +153,16 @@ class ModuleNewsArchive extends \ModuleNewsArchive
                 $offset = (max($page, 1) - 1) * $this->perPage;
 
                 // Add the pagination menu
-                $objPagination = new \Pagination($total, $this->perPage, \Config::get('maxPaginationLinks'), $id);
+                $objPagination = new Pagination($total, $this->perPage, Config::get('maxPaginationLinks'), $id);
                 $this->Template->pagination = $objPagination->generate("\n  ");
             }
         }
 
         // Get the news items
         if (isset($limit)) {
-            $objArticles = \NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, $limit, $offset);
+            $objArticles = NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, $limit, $offset);
         } else {
-            $objArticles = \NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives);
+            $objArticles = NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives);
         }
 
         // Add the articles

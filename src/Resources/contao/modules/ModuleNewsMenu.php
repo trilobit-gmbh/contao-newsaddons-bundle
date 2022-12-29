@@ -10,10 +10,18 @@ declare(strict_types=1);
 
 namespace Trilobit\NewsaddonsBundle;
 
+use Contao\Database;
+use Contao\Date;
+use Contao\Environment;
+use Contao\FrontendTemplate;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\System;
+
 /**
  * Class ModuleNewsMenu.
  */
-class ModuleNewsMenu extends \ModuleNewsMenu
+class ModuleNewsMenu extends \Contao\ModuleNewsMenu
 {
     /**
      * @var bool
@@ -77,10 +85,10 @@ class ModuleNewsMenu extends \ModuleNewsMenu
         $this->intNumberOfLinks = 7;
 
         $blnQuery = false;
-        list($this->strUrl) = explode('?', \Environment::get('request'), 2);
+        [$this->strUrl] = explode('?', Environment::get('request'), 2);
 
         // Prepare the URL
-        foreach (preg_split('/&(amp;)?/', \Environment::get('queryString'), -1, \PREG_SPLIT_NO_EMPTY) as $fragment) {
+        foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, \PREG_SPLIT_NO_EMPTY) as $fragment) {
             if (false === strpos($fragment, $this->strParameter.'=')) {
                 $this->strUrl .= (!$blnQuery ? '?' : '&amp;').$fragment;
                 $blnQuery = true;
@@ -89,7 +97,7 @@ class ModuleNewsMenu extends \ModuleNewsMenu
 
         $this->strVarConnector = $blnQuery ? '&amp;' : '?';
 
-        $objTemplate = new \FrontendTemplate('pagination');
+        $objTemplate = new FrontendTemplate('pagination');
 
         $objTemplate->hasFirst = $this->hasFirst();
         $objTemplate->hasPrevious = $this->hasPrevious();
@@ -103,26 +111,30 @@ class ModuleNewsMenu extends \ModuleNewsMenu
         $objTemplate->first = [
             'link' => $this->lblFirst,
             'href' => $this->linkToPage(1),
-            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1 .' ('.$this->pages[array_keys($this->pages)[0]]['link'].')')),
+            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1 .' ('.$this->pages[array_keys($this->pages)[0]]['link'].')')),
         ];
 
-        $objTemplate->previous = [
-            'link' => $this->lblPrevious,
-            'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage - 2]]['date']),
-            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage - 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage - 2]]['link'].')')),
-        ];
+        if (0 <= $this->intPage - 2) {
+            $objTemplate->previous = [
+                'link' => $this->lblPrevious,
+                'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage - 2]]['date']),
+                'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage - 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage - 2]]['link'].')')),
+            ];
+        }
 
         $objTemplate->next = [
             'link' => $this->lblNext,
             'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage]]['date']),
-            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage + 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage]]['link'].')')),
+            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage + 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage]]['link'].')')),
         ];
 
-        $objTemplate->last = [
-            'link' => $this->lblLast,
-            'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['date']),
-            'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages.' ('.$this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['link'].')')),
-        ];
+        if (0 <= $this->intTotalPages - 1) {
+            $objTemplate->last = [
+                'link' => $this->lblLast,
+                'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['date']),
+                'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages.' ('.$this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['link'].')')),
+            ];
+        }
 
         $objTemplate->class = 'pagination-'.$this->strParameter;
 
@@ -207,7 +219,7 @@ class ModuleNewsMenu extends \ModuleNewsMenu
                 $arrLinks[] = [
                     'page' => $this->pages[array_keys($this->pages)[$i - 1]]['page'],
                     'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$i - 1]]['date']),
-                    'title' => \StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i.' ('.$this->pages[array_keys($this->pages)[$i - 1]]['link'].')')),
+                    'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i.' ('.$this->pages[array_keys($this->pages)[$i - 1]]['link'].')')),
                 ];
             }
         }
@@ -223,10 +235,10 @@ class ModuleNewsMenu extends \ModuleNewsMenu
     protected function linkToPage($intPage)
     {
         if ($intPage <= 1 && !$this->blnForceParam) {
-            return ampersand($this->strUrl);
+            return StringUtil::ampersand($this->strUrl);
         }
 
-        return ampersand($this->strUrl).$this->strVarConnector.$this->strParameter.'='.$intPage;
+        return StringUtil::ampersand($this->strUrl).$this->strVarConnector.$this->strParameter.'='.$intPage;
     }
 
     /**
@@ -258,9 +270,9 @@ class ModuleNewsMenu extends \ModuleNewsMenu
      */
     protected function intPage()
     {
-        $intYear = \Input::get('year');
-        $intQuarter = \Input::get('quarter');
-        $intMonth = \Input::get('month');
+        $intYear = Input::get('year');
+        $intQuarter = Input::get('quarter');
+        $intMonth = Input::get('month');
 
         $intDate = null;
 
@@ -268,7 +280,7 @@ class ModuleNewsMenu extends \ModuleNewsMenu
             $intDate = $intYear;
 
             if (!isset($_GET['year'])) {
-                $intDate = date('Y');
+                $intDate = Date::parse('Y');
             }
         }
 
@@ -276,7 +288,7 @@ class ModuleNewsMenu extends \ModuleNewsMenu
             $intDate = $intQuarter;
 
             if (!isset($_GET['quarter'])) {
-                $intDate = date('Y').ceil(date('n', time()) / 3);
+                $intDate = Date::parse('Y').ceil(Date::parse('n', time()) / 3);
             }
         }
 
@@ -287,7 +299,7 @@ class ModuleNewsMenu extends \ModuleNewsMenu
             $intDate = $intMonth;
 
             if (!isset($_GET['month'])) {
-                $intDate = date('Ym');
+                $intDate = Date::parse('Ym');
             }
         }
 
@@ -346,10 +358,15 @@ class ModuleNewsMenu extends \ModuleNewsMenu
     protected function compileQuarterlyMenu()
     {
         $arrData = [];
-        $time = \Date::floorToMinute();
+        $time = Date::floorToMinute();
+        $blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        $isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
         // Get the dates
-        $objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, QUARTER(FROM_UNIXTIME(date, '%Y-%m-%d')) AS quarter, COUNT(*) AS count FROM tl_news WHERE pid IN(".implode(',', array_map('intval', $this->news_archives)).')'.((!BE_USER_LOGGED_IN || TL_MODE === 'BE') ? " AND (start='' OR start<='$time') AND (stop='' OR stop>'".($time + 60)."') AND published='1'" : '').' GROUP BY year, quarter ORDER BY year DESC, quarter DESC');
+        $objDates = Database::getInstance()
+            ->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, QUARTER(FROM_UNIXTIME(date, '%Y-%m-%d')) AS quarter, COUNT(*) AS count FROM tl_news WHERE pid IN(".implode(',', array_map('\intval', $this->news_archives)).')'.((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : '').' GROUP BY year, quarter ORDER BY year DESC, quarter DESC')
+        ;
 
         while ($objDates->next()) {
             $arrData[$objDates->year][$objDates->quarter] = $objDates->count;
@@ -378,9 +395,9 @@ class ModuleNewsMenu extends \ModuleNewsMenu
                 $arrItems[$intYear][$intQuarter]['date'] = $intDate;
                 $arrItems[$intYear][$intQuarter]['link'] = sprintf($GLOBALS['TL_LANG']['QUARTER'], $intQuarter, $intYear);
                 $arrItems[$intYear][$intQuarter]['href'] = $this->strUrl.'?quarter='.$intDate;
-                $arrItems[$intYear][$intQuarter]['title'] = \StringUtil::specialchars('Q'.$intQuarter.' '.$intYear.' ('.$quantity.')');
+                $arrItems[$intYear][$intQuarter]['title'] = StringUtil::specialchars('Q'.$intQuarter.' '.$intYear.' ('.$quantity.')');
                 $arrItems[$intYear][$intQuarter]['class'] = trim(((1 === ++$count) ? 'first ' : '').(($count === $limit) ? 'last' : ''));
-                $arrItems[$intYear][$intQuarter]['isActive'] = (\Input::get('quarter') === $intDate);
+                $arrItems[$intYear][$intQuarter]['isActive'] = (Input::get('quarter') === $intDate);
                 $arrItems[$intYear][$intQuarter]['quantity'] = $quantity;
             }
         }
@@ -389,6 +406,6 @@ class ModuleNewsMenu extends \ModuleNewsMenu
         $this->Template->items = $arrItems;
         $this->Template->showQuantity = ('' !== $this->news_showQuantity) ? true : false;
         $this->Template->url = $this->strUrl.'?';
-        $this->Template->activeYear = \Input::get('year');
+        $this->Template->activeYear = Input::get('year');
     }
 }
