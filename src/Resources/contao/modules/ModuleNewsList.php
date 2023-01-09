@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * @copyright  trilobit GmbH
  * @author     trilobit GmbH <https://github.com/trilobit-gmbh>
  * @license    LGPL-3.0-or-later
- * @link       http://github.com/trilobit-gmbh/contao-newsaddons-bundle
  */
 
 namespace Trilobit\NewsaddonsBundle;
@@ -103,18 +104,17 @@ class ModuleNewsList extends \Contao\ModuleNewsList
         }
 
         $this->Template->archives = $this->news_archives;
-        $this->Template->currentQuarter = date('Y').ceil(date('n') / 3);
+        $this->Template->currentQuarter = Date::parse('Y').ceil(date('n') / 3);
     }
 
     /**
      * Parse one or more items and return them as array.
      *
-     * @param Collection $objArticles
-     * @param bool       $blnAddArchive
+     * @param mixed $objArticles
      *
      * @return array
      */
-    protected function parseArticlesQuarterly($objArticles, $blnAddArchive = false)
+    protected function parseArticlesQuarterly($objArticles, bool $blnAddArchive = false)
     {
         $limit = $objArticles->count();
 
@@ -126,7 +126,7 @@ class ModuleNewsList extends \Contao\ModuleNewsList
         $arrArticles = [];
 
         foreach ($objArticles as $objArticle) {
-            $intQuarter = date('Y', $objArticle->date).ceil(date('n', $objArticle->date) / 3);
+            $intQuarter = Date::parse('Y', (int) $objArticle->date).ceil(Date::parse('n', (int) $objArticle->date) / 3);
             $arrArticles[$intQuarter][] = $this->parseArticle($objArticle, $blnAddArchive, ((1 === ++$count) ? ' first' : '').(($count === $limit) ? ' last' : '').((0 === ($count % 2)) ? ' odd' : ' even'), $count);
         }
 

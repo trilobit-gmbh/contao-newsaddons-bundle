@@ -22,8 +22,8 @@
  */
 if (!isset($_GET['year']) && !isset($_GET['quarter']) && !isset($_GET['month']) && !isset($_GET['day']))
 {
-    \Environment::set('uri', $this->pages[array_keys($this->pages)[0]]['href']);
-    \Controller::reload();
+    \Contao\Environment::set('uri', $this->pages[array_keys($this->pages)[0]]['href']);
+    \Contao\Controller::reload();
 }
 ?>
 
