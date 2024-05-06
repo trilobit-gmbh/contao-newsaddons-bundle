@@ -211,13 +211,13 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         for ($i = $intFirstLink; $i <= $intLastLink; ++$i) {
             if ($i === $this->intPage) {
                 $arrLinks[] = [
-                    'page' => $this->pages[array_keys($this->pages)[$i - 1]]['page'],
+                    'page' => $this->pages[array_keys($this->pages)[$i - 1]]['page'] ?? null,
                     'href' => null,
                     'title' => null,
                 ];
             } else {
                 $arrLinks[] = [
-                    'page' => $this->pages[array_keys($this->pages)[$i - 1]]['page'],
+                    'page' => $this->pages[array_keys($this->pages)[$i - 1]]['page'] ?? null,
                     'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$i - 1]]['date']),
                     'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i.' ('.$this->pages[array_keys($this->pages)[$i - 1]]['link'].')')),
                 ];
