@@ -1,4 +1,4 @@
-TrilobitNewsAddonsBundle
+News addons bundle
 ========================
 
 Mit der NewsAddons Erweiterung ist es möglich, Nachrichten nach Quartalen gruppiert auszugeben. Die beiden Module News-Archiv und News-Menü werden um die Option Quartal ergänzt.
@@ -32,4 +32,5 @@ Install the extension via composer: [trilobit-gmbh/contao-newsaddons-bundle](htt
 Compatibility
 -------------
 
-- Contao version ~4.9
+- Contao version ~4.13
+- Contao version ~5.0
