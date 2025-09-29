@@ -257,7 +257,7 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         ) {
             $intTotalPages = 0;
 
-            foreach ($this->Template->items as $intYear => $arrItems) {
+            foreach ($this->Template->items as $arrItems) {
                 $intTotalPages += \count($arrItems);
             }
 
@@ -343,8 +343,8 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         ) {
             $arrPages = [];
 
-            foreach ($this->Template->items as $intYear => $arrItems) {
-                foreach ($arrItems as $key => $arrItem) {
+            foreach ($this->Template->items as $arrItems) {
+                foreach ($arrItems as $arrItem) {
                     $arrItem['page'] = $arrItem['link'];
 
                     $arrPages[$arrItem['date']] = $arrItem;
