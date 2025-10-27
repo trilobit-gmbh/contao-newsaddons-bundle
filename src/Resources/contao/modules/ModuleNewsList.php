@@ -92,7 +92,7 @@ class ModuleNewsList extends \Contao\ModuleNewsList
             $this->Template->pagination = $objPagination->generate("\n  ");
         }
 
-        $objArticles = $this->fetchItems($this->news_archives, $blnFeatured, ($limit ?: 0), $offset);
+        $objArticles = $this->fetchItems($this->news_archives, $blnFeatured, $limit ?: 0, $offset);
 
         // Add the articles
         if (null !== $objArticles) {
@@ -110,11 +110,9 @@ class ModuleNewsList extends \Contao\ModuleNewsList
     /**
      * Parse one or more items and return them as array.
      *
-     * @param mixed $objArticles
-     *
      * @return array
      */
-    protected function parseArticlesQuarterly($objArticles, bool $blnAddArchive = false)
+    protected function parseArticlesQuarterly(mixed $objArticles, bool $blnAddArchive = false)
     {
         $limit = $objArticles->count();
 
