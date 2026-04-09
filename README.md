@@ -29,8 +29,11 @@ Installation
 
 Install the extension via composer: [trilobit-gmbh/contao-newsaddons-bundle](https://packagist.org/packages/trilobit-gmbh/contao-newsaddons-bundle).
 
+
+
 Compatibility
 -------------
 
 - Contao version ~4.13
-- Contao version ~5.0
+- Contao version ~5.3
+- Contao version ~5.7

@@ -89,7 +89,7 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
 
         // Prepare the URL
         foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, \PREG_SPLIT_NO_EMPTY) as $fragment) {
-            if (false === strpos($fragment, $this->strParameter.'=')) {
+            if (!str_contains($fragment, $this->strParameter.'=')) {
                 $this->strUrl .= (!$blnQuery ? '?' : '&amp;').$fragment;
                 $blnQuery = true;
             }
@@ -106,33 +106,33 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
 
         $objTemplate->pages = $this->getItemsAsArray();
         $objTemplate->pages = $this->getItemsAsArray();
-        $objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
+        $objTemplate->total = \sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
 
         $objTemplate->first = [
             'link' => $this->lblFirst,
             'href' => $this->linkToPage(1),
-            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1 .' ('.$this->pages[array_keys($this->pages)[0]]['link'].')')),
+            'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1 .' ('.$this->pages[array_keys($this->pages)[0]]['link'].')')),
         ];
 
         if (0 <= $this->intPage - 2) {
             $objTemplate->previous = [
                 'link' => $this->lblPrevious,
                 'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage - 2]]['date']),
-                'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage - 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage - 2]]['link'].')')),
+                'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage - 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage - 2]]['link'].')')),
             ];
         }
 
         $objTemplate->next = [
             'link' => $this->lblNext,
             'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intPage]]['date']),
-            'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage + 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage]]['link'].')')),
+            'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intPage + 1 .' ('.$this->pages[array_keys($this->pages)[$this->intPage]]['link'].')')),
         ];
 
         if (0 <= $this->intTotalPages - 1) {
             $objTemplate->last = [
                 'link' => $this->lblLast,
                 'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['date']),
-                'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages.' ('.$this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['link'].')')),
+                'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages.' ('.$this->pages[array_keys($this->pages)[$this->intTotalPages - 1]]['link'].')')),
             ];
         }
 
@@ -219,7 +219,7 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
                 $arrLinks[] = [
                     'page' => $this->pages[array_keys($this->pages)[$i - 1]]['page'] ?? null,
                     'href' => $this->linkToPage($this->pages[array_keys($this->pages)[$i - 1]]['date']),
-                    'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i.' ('.$this->pages[array_keys($this->pages)[$i - 1]]['link'].')')),
+                    'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i.' ('.$this->pages[array_keys($this->pages)[$i - 1]]['link'].')')),
                 ];
             }
         }
@@ -228,11 +228,9 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
     }
 
     /**
-     * @param $intPage
-     *
      * @return string|string[]|null
      */
-    protected function linkToPage($intPage)
+    protected function linkToPage(mixed $intPage)
     {
         if ($intPage <= 1 && !$this->blnForceParam) {
             return StringUtil::ampersand($this->strUrl);
@@ -257,7 +255,7 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         ) {
             $intTotalPages = 0;
 
-            foreach ($this->Template->items as $intYear => $arrItems) {
+            foreach ($this->Template->items as $arrItems) {
                 $intTotalPages += \count($arrItems);
             }
 
@@ -343,8 +341,8 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
         ) {
             $arrPages = [];
 
-            foreach ($this->Template->items as $intYear => $arrItems) {
-                foreach ($arrItems as $key => $arrItem) {
+            foreach ($this->Template->items as $arrItems) {
+                foreach ($arrItems as $arrItem) {
                     $arrItem['page'] = $arrItem['link'];
 
                     $arrPages[$arrItem['date']] = $arrItem;
@@ -390,10 +388,10 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
                 $intDate = $intYear.$intQuarter;
                 $intQuarter = ((int) $intQuarter);
 
-                $quantity = sprintf((($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries']), $intCount);
+                $quantity = \sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
                 $arrItems[$intYear][$intQuarter]['date'] = $intDate;
-                $arrItems[$intYear][$intQuarter]['link'] = sprintf($GLOBALS['TL_LANG']['QUARTER'], $intQuarter, $intYear);
+                $arrItems[$intYear][$intQuarter]['link'] = \sprintf($GLOBALS['TL_LANG']['QUARTER'], $intQuarter, $intYear);
                 $arrItems[$intYear][$intQuarter]['href'] = $this->strUrl.'?quarter='.$intDate;
                 $arrItems[$intYear][$intQuarter]['title'] = StringUtil::specialchars('Q'.$intQuarter.' '.$intYear.' ('.$quantity.')');
                 $arrItems[$intYear][$intQuarter]['class'] = trim(((1 === ++$count) ? 'first ' : '').(($count === $limit) ? 'last' : ''));
