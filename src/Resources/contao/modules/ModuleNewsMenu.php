@@ -230,7 +230,7 @@ class ModuleNewsMenu extends \Contao\ModuleNewsMenu
     /**
      * @return string|string[]|null
      */
-    protected function linkToPage($intPage)
+    protected function linkToPage(mixed $intPage)
     {
         if ($intPage <= 1 && !$this->blnForceParam) {
             return StringUtil::ampersand($this->strUrl);

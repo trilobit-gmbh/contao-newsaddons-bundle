@@ -10,9 +10,12 @@ declare(strict_types=1);
 
 namespace Trilobit\NewsaddonsBundle\ContaoManager;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\NewsBundle\ContaoNewsBundle;
+use Trilobit\NewsaddonsBundle\TrilobitNewsaddonsBundle;
 
 /**
  * Plugin for the Contao Manager.
@@ -24,8 +27,11 @@ class Plugin implements BundlePluginInterface
     public function getBundles(ParserInterface $parser)
     {
         return [
-            BundleConfig::create(\Trilobit\NewsaddonsBundle\TrilobitNewsaddonsBundle::class)
-                ->setLoadAfter([\Contao\CoreBundle\ContaoCoreBundle::class, \Contao\NewsBundle\ContaoNewsBundle::class]),
+            BundleConfig::create(TrilobitNewsaddonsBundle::class)
+                ->setLoadAfter([
+                    ContaoCoreBundle::class,
+                    ContaoNewsBundle::class,
+                ]),
         ];
     }
 }
